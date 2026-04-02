@@ -1,0 +1,24 @@
+---
+const { envId } = Astro.props;
+---
+<div id="twikoo-comment" class="mt-12"></div>
+
+<script is:inline data-astro-ignore>
+  function initTwikoo() {
+    const el = document.getElementById('twikoo-comment');
+    if (!el || window.twikoo) return;
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/twikoo@1.7.4/dist/twikoo.all.min.js';
+    script.onload = () => {
+      window.twikoo.init({
+        envId: '${envId}',
+        el: '#twikoo-comment',
+        path: window.location.pathname,
+        lang: 'zh-CN'
+      });
+    };
+    document.body.appendChild(script);
+  }
+  // 延迟加载，避免阻塞页面
+  setTimeout(initTwikoo, 300);
+</script>
