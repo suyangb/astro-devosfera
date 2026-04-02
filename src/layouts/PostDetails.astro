@@ -202,7 +202,10 @@ const nextPost =
     </div>
 
     <!-- Twikoo 评论区域 -->
-    {twikoo.enable && <Twikoo envId={twikoo.envId} />}
+    <div class="p-4 bg-gray-100 dark:bg-gray-800">
+      测试位置：这里应该出现评论
+      {twikoo.enable && <Twikoo envId={twikoo.envId} />}
+    </div>
 
     <!-- Tags & Share row -->
     <div
@@ -250,10 +253,10 @@ const nextPost =
                 class="size-3.5 text-accent/50 transition-transform duration-300 group-hover:-translate-x-1 rtl:rotate-180"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
               >
                 <line x1="19" y1="12" x2="5" y2="12" />
                 <polyline points="12 19 5 12 12 5" />
@@ -428,8 +431,8 @@ const nextPost =
 
   /* Go to page start after page swap */
   document.addEventListener("astro:after-swap", () =>
-    window.scrollTo({ left: 0, top: 0, behavior: "instant" }
-  ));
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+  );
 </script>
 
 <style>
