@@ -11,7 +11,8 @@ import BackToTopButton from "@/components/BackToTopButton.astro";
 import GalleryEmbed from "@/components/GalleryEmbed.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
-import { SITE } from "@/config";
+import { SITE, twikoo } from "@/config";
+import Twikoo from "@/components/Twikoo.astro";
 
 type Props = {
   post: CollectionEntry<"blog">;
@@ -199,6 +200,9 @@ const nextPost =
         <div class="absolute inset-0 bg-linear-to-l from-transparent via-accent/40 to-accent/40 blur-[2px]"></div>
       </div>
     </div>
+
+    <!-- Twikoo 评论区域 -->
+    {twikoo.enable && <Twikoo envId={twikoo.envId} />}
 
     <!-- Tags & Share row -->
     <div
@@ -424,8 +428,8 @@ const nextPost =
 
   /* Go to page start after page swap */
   document.addEventListener("astro:after-swap", () =>
-    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
-  );
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" }
+  ));
 </script>
 
 <style>
