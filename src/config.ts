@@ -41,3 +41,9 @@ export const SITE = {
     duration: 30, // duration in seconds (used for local files, ignored on streams)
   },
 } as const;
+
+// Twikoo 评论配置
+export const twikoo = {
+  enable: true,
+  envId: "https://twikoo.wsyblog.cn" // 记得替换成你自己的 envId
+};
