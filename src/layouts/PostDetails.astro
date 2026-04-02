@@ -14,23 +14,23 @@ import { slugifyStr } from "@/utils/slugify";
 import { SITE } from "@/config";
 
 type Props = {
-post: CollectionEntry<"blog">;
-posts: CollectionEntry<"blog">[];
+  post: CollectionEntry<"blog">;
+  posts: CollectionEntry<"blog">[];
 };
 
 const { post, posts } = Astro.props;
 
 const {
-title,
-author,
-description,
-ogImage: initOgImage,
-canonicalURL,
-pubDatetime,
-modDatetime,
-timezone,
-tags,
-hideEditPost,
+  title,
+  author,
+  description,
+  ogImage: initOgImage,
+  canonicalURL,
+  pubDatetime,
+  modDatetime,
+  timezone,
+  tags,
+  hideEditPost,
 } = post.data;
 
 const { Content } = await render(post);
@@ -39,49 +39,48 @@ let ogImageUrl: string | undefined;
 
 // Determine OG image source
 if (typeof initOgImage === "string") {
-ogImageUrl = initOgImage; // Remote OG image (absolute URL)
+  ogImageUrl = initOgImage; // Remote OG image (absolute URL)
 } else if (initOgImage?.src) {
-ogImageUrl = initOgImage.src; // Local asset
+  ogImageUrl = initOgImage.src; // Local asset
 }
 
 // Use dynamic OG image if enabled and no remote|local ogImage
 if (!ogImageUrl && SITE.dynamicOgImage) {
-ogImageUrl = ${getPath(post.id, post.filePath)}/index.png;
+  ogImageUrl = `${getPath(post.id, post.filePath)}/index.png`;
 }
 
-// Resolve OG image URL (or fallback to SITE.ogImage / default og.png)
+// Resolve OG image URL (or fallback to SITE.ogImage / default `og.png`)
 const ogImage = ogImageUrl
-? new URL(ogImageUrl, Astro.url.origin).href
-: undefined;
+  ? new URL(ogImageUrl, Astro.url.origin).href
+  : undefined;
 
 const layoutProps = {
-title: ${title} | ${SITE.title},
-author,
-description,
-pubDatetime,
-modDatetime,
-canonicalURL,
-ogImage,
-scrollSmooth: true,
+  title: `${title} | ${SITE.title}`,
+  author,
+  description,
+  pubDatetime,
+  modDatetime,
+  canonicalURL,
+  ogImage,
+  scrollSmooth: true,
 };
 
 /* ========== Prev/Next Posts ========== */
 
 const allPosts = posts.map(({ data: { title }, id, filePath }) => ({
-id,
-title,
-filePath,
+  id,
+  title,
+  filePath,
 }));
 
 const currentPostIndex = allPosts.findIndex(a => a.id === post.id);
 
 const prevPost = currentPostIndex !== 0 ? allPosts[currentPostIndex - 1] : null;
 const nextPost =
-currentPostIndex < allPosts.length - 1 ? allPosts[currentPostIndex + 1] : null;
+  currentPostIndex < allPosts.length - 1 ? allPosts[currentPostIndex + 1] : null;
 ---
 
 <Layout {...layoutProps}>
-
   <Header />
   {SITE.showBackButton && <Breadcrumb withBackButton />}
   <main
@@ -101,9 +100,8 @@ currentPostIndex < allPosts.length - 1 ? allPosts[currentPostIndex + 1] : null;
           {title}
         </h1>
 
-<!-- Tags as badges -->
-
-<div class="mt-4 flex flex-wrap justify-center gap-2">
+        <!-- Tags as badges -->
+        <div class="mt-4 flex flex-wrap justify-center gap-2">
           {
             tags.map((tag: string) => (
               <a
@@ -117,9 +115,8 @@ currentPostIndex < allPosts.length - 1 ? allPosts[currentPostIndex + 1] : null;
           }
         </div>
 
-<!-- Metadata row -->
-
-<div
+        <!-- Metadata row -->
+        <div
           class="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm"
         >
           <!-- Author chip -->
@@ -141,9 +138,8 @@ currentPostIndex < allPosts.length - 1 ? allPosts[currentPostIndex + 1] : null;
             <span class="opacity-70">{author}</span>
           </div>
 
-  <!-- Date chip -->
-
-  <div
+          <!-- Date chip -->
+          <div
             class="inline-flex items-center gap-1.5 rounded-lg border border-border/25 bg-muted/10 px-2.5 py-1 backdrop-blur-sm"
           >
             <svg
@@ -169,50 +165,48 @@ currentPostIndex < allPosts.length - 1 ? allPosts[currentPostIndex + 1] : null;
             />
           </div>
 
-  <!-- Edit post -->
+          <!-- Edit post -->
+          <EditPost
+            {hideEditPost}
+            {post}
+            class="flex rounded-lg border border-border/25 bg-muted/10 px-2.5 py-1 opacity-70 backdrop-blur-sm transition-all duration-200 hover:border-accent/30 hover:opacity-100 [&>svg]:size-3.5"
+          />
+        </div>
 
-<EditPost
-{hideEditPost}
-{post}
-class="flex rounded-lg border border-border/25 bg-muted/10 px-2.5 py-1 opacity-70 backdrop-blur-sm transition-all duration-200 hover:border-accent/30 hover:opacity-100 [&>svg]:size-3.5"
-/>
 
-  </div>
+      </div>
     </header>
 
-<article
+    <article
       id="article"
       class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
     >
       <Content components={{ GalleryEmbed }} />
     </article>
 
-<!-- ═══════ Post footer section ═══════ -->
-
-<div class="relative mt-12 mb-8 flex items-center justify-center gap-4" aria-hidden="true">
+    <!-- ═══════ Post footer section ═══════ -->
+    <div class="relative mt-12 mb-8 flex items-center justify-center gap-4" aria-hidden="true">
       <div class="relative h-px flex-1 bg-linear-to-r from-transparent via-border/30 to-accent/20">
         <div class="absolute inset-0 bg-linear-to-r from-transparent via-accent/40 to-accent/40 blur-[2px]"></div>
       </div>
-
-  <div class="relative z-10 flex items-center gap-2 font-cartograph text-[10px] tracking-widest text-accent/40 uppercase select-none">
+      
+      <div class="relative z-10 flex items-center gap-2 font-cartograph text-[10px] tracking-widest text-accent/40 uppercase select-none">
         <span class="h-1.5 w-1.5 rounded-full bg-accent/50 shadow-[0_0_8px_var(--color-accent)]"></span>
         end
       </div>
 
-  <div class="relative h-px flex-1 bg-linear-to-l from-transparent via-border/30 to-accent/20">
+      <div class="relative h-px flex-1 bg-linear-to-l from-transparent via-border/30 to-accent/20">
         <div class="absolute inset-0 bg-linear-to-l from-transparent via-accent/40 to-accent/40 blur-[2px]"></div>
       </div>
     </div>
 
-<!-- Twikoo 评论区域 -->
-
-<div class="mt-10 mb-10">
-      <div id="twikoo"></div>
+    <!-- Twikoo 评论区域 -->
+    <div class="mt-8 mb-10">
+      <div id="twikoo-comment"></div>
     </div>
 
-<!-- Tags & Share row -->
-
-<div
+    <!-- Tags & Share row -->
+    <div
       class="mt-6 mb-8 flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:justify-between"
     >
       <!-- Tags (duplicated from header — aria-hidden to avoid double indexing) -->
@@ -231,23 +225,20 @@ class="flex rounded-lg border border-border/25 bg-muted/10 px-2.5 py-1 opacity-7
         }
       </div>
 
-  <!-- Share links -->
-
-  <ShareLinks />
+      <!-- Share links -->
+      <ShareLinks />
     </div>
 
-<!-- Decorative separator before prev/next -->
-
-<div class="my-6 flex items-center gap-3" aria-hidden="true">
+    <!-- Decorative separator before prev/next -->
+    <div class="my-6 flex items-center gap-3" aria-hidden="true">
       <div
         class="h-px flex-1 bg-linear-to-r from-transparent via-border/30 to-transparent"
       >
       </div>
     </div>
 
-<!-- Previous/Next Post Navigation -->
-
-<div data-pagefind-ignore class="grid grid-cols-2 gap-3">
+    <!-- Previous/Next Post Navigation -->
+    <div data-pagefind-ignore class="grid grid-cols-2 gap-3">
       {
         prevPost ? (
           <a
@@ -316,17 +307,15 @@ class="flex rounded-lg border border-border/25 bg-muted/10 px-2.5 py-1 opacity-7
   <Footer />
 </Layout>
 
-<script is:inline src="https://cdn.jsdelivr.net/npm/twikoo@1.7.4/dist/twikoo.all.min.js"></script>
-
-<script is:inline>
-document.addEventListener('DOMContentLoaded', function () {
-  twikoo.init({
-    envId: "https://twikoo.wsyblog.cn",
-    el: "#twikoo",
-    path: window.location.pathname,
-    lang: "zh-CN"
+<script>
+  import('https://cdn.jsdelivr.net/npm/twikoo@1.7.4/dist/twikoo.all.min.js').then(() => {
+    twikoo.init({
+      envId: "https://twikoo.wsyblog.cn",
+      el: "#twikoo-comment",
+      path: window.location.pathname,
+      lang: "zh-CN"
+    });
   });
-});
 </script>
 
 <style>
